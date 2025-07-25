@@ -1,0 +1,334 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Sistema Administrativo{% endblock %}
+{% block page_title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="space-y-6 sm:space-y-8">
+    <!-- Header del Dashboard -->
+    <div class="bg-gradient-to-r from-primary-600 via-primary-500 to-primary-700 rounded-2xl sm:rounded-3xl shadow-2xl p-4 sm:p-8 text-white relative overflow-hidden animate-scale-in">
+        <!-- Elementos decorativos de fondo -->
+        <div class="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent"></div>
+        <div class="absolute top-0 right-0 w-32 h-32 sm:w-64 sm:h-64 bg-white/5 rounded-full -translate-y-16 sm:-translate-y-32 translate-x-16 sm:translate-x-32"></div>
+        <div class="absolute bottom-0 left-0 w-16 h-16 sm:w-32 sm:h-32 bg-white/5 rounded-full translate-y-8 sm:translate-y-16 -translate-x-8 sm:-translate-x-16"></div>
+        
+        <div class="flex flex-col lg:flex-row items-center lg:items-center justify-between relative z-10 space-y-6 lg:space-y-0">
+            <div class="animate-fade-in-left text-center lg:text-left w-full lg:w-auto">
+                <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start mb-4 space-y-3 sm:space-y-0">
+                    <div class="w-12 h-12 sm:w-16 sm:h-16 bg-white/20 rounded-2xl flex items-center justify-center mr-0 sm:mr-4 backdrop-blur-sm">
+                        <i class="fas fa-tachometer-alt text-lg sm:text-2xl"></i>
+                    </div>
+                    <div class="text-center lg:text-left">
+                        <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold mb-2 bg-gradient-to-r from-white to-white/80 bg-clip-text text-transparent">Dashboard</h1>
+                        <p class="text-primary-100 text-base sm:text-xl font-medium">Panel de control administrativo</p>
+                    </div>
+                </div>
+                <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start space-y-2 sm:space-y-0 sm:space-x-6 text-xs sm:text-sm">
+                    <div class="flex items-center">
+                        <div class="w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse"></div>
+                        <span>Sistema operativo</span>
+                    </div>
+                    <div class="flex items-center">
+                        <i class="fas fa-clock mr-2"></i>
+                        <span id="current-time"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="hidden lg:block animate-fade-in-right">
+                <div class="w-24 h-24 sm:w-32 sm:h-32 bg-white/10 rounded-3xl flex items-center justify-center hover-scale backdrop-blur-sm border border-white/20">
+                    <i class="fas fa-chart-line text-3xl sm:text-5xl"></i>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Tarjetas de estadísticas mejoradas -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
+        <!-- Total Empleados -->
+        <div class="group bg-gradient-to-br from-white to-gray-50 rounded-2xl shadow-lg border border-gray-200 p-4 sm:p-6 lg:p-8 hover-lift card-stagger relative overflow-hidden">
+            <div class="absolute top-0 right-0 w-12 h-12 sm:w-20 sm:h-20 bg-blue-500/10 rounded-full -translate-y-6 sm:-translate-y-10 translate-x-6 sm:translate-x-10 group-hover:scale-110 transition-transform"></div>
+            <div class="relative z-10">
+                <div class="flex items-center justify-between mb-3 sm:mb-4">
+                    <div class="w-10 h-10 sm:w-14 sm:h-14 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center shadow-lg">
+                        <i class="fas fa-users text-white text-sm sm:text-xl"></i>
+                    </div>
+                    <div class="text-right">
+                        <div class="w-2 h-2 sm:w-3 sm:h-3 bg-green-500 rounded-full animate-pulse"></div>
+                    </div>
+                </div>
+                <div>
+                    <p class="text-xs sm:text-sm font-semibold text-gray-600 mb-1 sm:mb-2 uppercase tracking-wide">Total Empleados</p>
+                    <p class="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 animate-counter mb-1 sm:mb-2" data-target="{{ total_empleados }}">0</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Empleados Activos -->
+        <div class="group bg-gradient-to-br from-white to-gray-50 rounded-2xl shadow-lg border border-gray-200 p-4 sm:p-6 lg:p-8 hover-lift card-stagger relative overflow-hidden">
+            <div class="absolute top-0 right-0 w-12 h-12 sm:w-20 sm:h-20 bg-green-500/10 rounded-full -translate-y-6 sm:-translate-y-10 translate-x-6 sm:translate-x-10 group-hover:scale-110 transition-transform"></div>
+            <div class="relative z-10">
+                <div class="flex items-center justify-between mb-3 sm:mb-4">
+                    <div class="w-10 h-10 sm:w-14 sm:h-14 bg-gradient-to-br from-green-500 to-green-600 rounded-2xl flex items-center justify-center shadow-lg">
+                        <i class="fas fa-user-check text-white text-sm sm:text-xl"></i>
+                    </div>
+                    <div class="text-right">
+                        <div class="w-2 h-2 sm:w-3 sm:h-3 bg-green-500 rounded-full animate-pulse"></div>
+                    </div>
+                </div>
+                <div>
+                    <p class="text-xs sm:text-sm font-semibold text-gray-600 mb-1 sm:mb-2 uppercase tracking-wide">Empleados Activos</p>
+                    <p class="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 animate-counter mb-1 sm:mb-2" data-target="{{ empleados_activos }}">0</p>
+                    <div class="flex items-center text-xs sm:text-sm">
+                        <span class="text-green-600 font-medium">Activos</span>
+                        <i class="fas fa-check text-green-600 ml-1 sm:ml-2 text-xs"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Departamentos -->
+        <div class="group bg-gradient-to-br from-white to-gray-50 rounded-2xl shadow-lg border border-gray-200 p-4 sm:p-6 lg:p-8 hover-lift card-stagger relative overflow-hidden">
+            <div class="absolute top-0 right-0 w-12 h-12 sm:w-20 sm:h-20 bg-purple-500/10 rounded-full -translate-y-6 sm:-translate-y-10 translate-x-6 sm:translate-x-10 group-hover:scale-110 transition-transform"></div>
+            <div class="relative z-10">
+                <div class="flex items-center justify-between mb-3 sm:mb-4">
+                    <div class="w-10 h-10 sm:w-14 sm:h-14 bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg">
+                        <i class="fas fa-sitemap text-white text-sm sm:text-xl"></i>
+                    </div>
+                    <div class="text-right">
+                        <div class="w-2 h-2 sm:w-3 sm:h-3 bg-purple-500 rounded-full animate-pulse"></div>
+                    </div>
+                </div>
+                <div>
+                    <p class="text-xs sm:text-sm font-semibold text-gray-600 mb-1 sm:mb-2 uppercase tracking-wide">Departamentos</p>
+                    <p class="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 animate-counter mb-1 sm:mb-2" data-target="{{ departamentos }}">0</p>
+                    <div class="flex items-center text-xs sm:text-sm">
+                        <span class="text-purple-600 font-medium">Organizados</span>
+                        <i class="fas fa-sitemap text-purple-600 ml-1 sm:ml-2 text-xs"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Acciones rápidas y widgets -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8 items-stretch min-h-[400px] sm:min-h-[500px] justify-items-center lg:justify-items-stretch">
+        <!-- Acciones Rápidas -->
+        <div class="lg:col-span-2 animate-on-scroll h-full flex flex-col">
+            <div class="bg-gradient-to-br from-white to-gray-50 rounded-2xl shadow-lg border border-gray-200 p-4 sm:p-6 lg:p-8 hover-lift h-full flex flex-col">
+                <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 sm:mb-8 space-y-3 sm:space-y-0">
+                    <div class="flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-y-0">
+                        <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-primary-500 to-primary-600 rounded-2xl flex items-center justify-center mr-0 sm:mr-4 shadow-lg">
+                            <i class="fas fa-bolt text-white text-sm sm:text-lg"></i>
+                        </div>
+                        <div class="text-center sm:text-left">
+                            <h3 class="text-xl sm:text-2xl font-bold text-gray-900 animate-fade-in-left">Acciones Rápidas</h3>
+                            <p class="text-gray-600 text-sm sm:text-base">Accede rápidamente a las funciones principales</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 h-full justify-items-center sm:justify-items-stretch">
+                    <!-- Gestión de Empleados -->
+                    <div class="group bg-white rounded-xl p-4 sm:p-6 border border-gray-200 hover:border-primary-300 hover:shadow-xl transition-all cursor-pointer hover-lift animate-on-scroll relative overflow-hidden h-full flex flex-col w-full max-w-sm sm:max-w-none">
+                        <div class="absolute top-0 right-0 w-12 h-12 sm:w-16 sm:h-16 bg-primary-500/5 rounded-full -translate-y-6 sm:-translate-y-8 translate-x-6 sm:translate-x-8 group-hover:scale-110 transition-transform"></div>
+                        <div class="relative z-10">
+                            <div class="flex flex-col sm:flex-row items-center sm:items-center mb-3 sm:mb-4 space-y-2 sm:space-y-0">
+                                <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-primary-500 to-primary-600 rounded-xl flex items-center justify-center mr-0 sm:mr-4 shadow-lg group-hover:scale-110 transition-transform">
+                                    <i class="fas fa-users text-white text-sm sm:text-base"></i>
+                                </div>
+                                <h4 class="font-bold text-gray-900 text-base sm:text-lg text-center sm:text-left">Gestión de Empleados</h4>
+                            </div>
+                            <p class="text-gray-600 mb-3 sm:mb-4 leading-relaxed text-sm sm:text-base">Administra la información de todos los empleados de la empresa de manera eficiente.</p>
+                            <div class="space-y-2 sm:space-y-3">
+                                <a href="{{ url_for('empleados') }}" class="flex items-center text-xs sm:text-sm text-primary-600 hover:text-primary-700 font-semibold btn-press group/item">
+                                    <i class="fas fa-list mr-2 sm:mr-3 group-hover/item:translate-x-1 transition-transform"></i>Ver todos los empleados
+                                </a>
+                                <a href="{{ url_for('nuevo_empleado') }}" class="flex items-center text-xs sm:text-sm text-primary-600 hover:text-primary-700 font-semibold btn-press group/item">
+                                    <i class="fas fa-plus mr-2 sm:mr-3 group-hover/item:translate-x-1 transition-transform"></i>Agregar nuevo empleado
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Gestión de Departamentos -->
+                    <div class="group bg-white rounded-xl p-4 sm:p-6 border border-gray-200 hover:border-accent-300 hover:shadow-xl transition-all cursor-pointer hover-lift animate-on-scroll relative overflow-hidden h-full flex flex-col w-full max-w-sm sm:max-w-none">
+                        <div class="absolute top-0 right-0 w-12 h-12 sm:w-16 sm:h-16 bg-accent-500/5 rounded-full -translate-y-6 sm:-translate-y-8 translate-x-6 sm:translate-x-8 group-hover:scale-110 transition-transform"></div>
+                        <div class="relative z-10">
+                            <div class="flex flex-col sm:flex-row items-center sm:items-center mb-3 sm:mb-4 space-y-2 sm:space-y-0">
+                                <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-accent-500 to-accent-600 rounded-xl flex items-center justify-center mr-0 sm:mr-4 shadow-lg group-hover:scale-110 transition-transform">
+                                    <i class="fas fa-sitemap text-white text-sm sm:text-base"></i>
+                                </div>
+                                <h4 class="font-bold text-gray-900 text-base sm:text-lg text-center sm:text-left">Gestión de Departamentos</h4>
+                            </div>
+                            <p class="text-gray-600 mb-3 sm:mb-4 leading-relaxed text-sm sm:text-base">Organiza y gestiona los departamentos de la empresa de forma estructurada.</p>
+                            <div class="space-y-2 sm:space-y-3">
+                                <a href="{{ url_for('departamentos') }}" class="flex items-center text-xs sm:text-sm text-accent-600 hover:text-accent-700 font-semibold btn-press group/item">
+                                    <i class="fas fa-list mr-2 sm:mr-3 group-hover/item:translate-x-1 transition-transform"></i>Ver todos los departamentos
+                                </a>
+                                <a href="{{ url_for('nuevo_departamento') }}" class="flex items-center text-xs sm:text-sm text-accent-600 hover:text-accent-700 font-semibold btn-press group/item">
+                                    <i class="fas fa-plus mr-2 sm:mr-3 group-hover/item:translate-x-1 transition-transform"></i>Crear nuevo departamento
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Widget lateral -->
+        <div class="space-y-4 sm:space-y-6 w-full max-w-md mx-auto lg:mx-0">
+            <!-- Estado del Sistema -->
+            <div class="bg-gradient-to-br from-white to-gray-50 rounded-2xl shadow-lg border border-gray-200 p-4 sm:p-6 hover-lift animate-on-scroll relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-12 h-12 sm:w-16 sm:h-16 bg-green-500/5 rounded-full -translate-y-6 sm:-translate-y-8 translate-x-6 sm:translate-x-8"></div>
+                <div class="relative z-10">
+                    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 sm:mb-6 space-y-2 sm:space-y-0">
+                        <div class="flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-y-0">
+                            <div class="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center mr-0 sm:mr-3 shadow-lg">
+                                <i class="fas fa-server text-white text-sm sm:text-base"></i>
+                            </div>
+                            <h3 class="text-base sm:text-lg font-bold text-gray-900 text-center sm:text-left">Estado del Sistema</h3>
+                        </div>
+                        <div class="w-2 h-2 sm:w-3 sm:h-3 bg-green-500 rounded-full animate-pulse shadow-lg"></div>
+                    </div>
+                    
+                    <div class="space-y-3 sm:space-y-4">
+                        <div class="flex items-center justify-between p-2 sm:p-3 bg-white rounded-xl border border-gray-100 animate-fade-in-up delay-100">
+                            <div class="flex items-center">
+                                <div class="w-2 h-2 bg-green-500 rounded-full mr-2 sm:mr-3"></div>
+                                <span class="text-xs sm:text-sm font-medium text-gray-700">Base de datos</span>
+                            </div>
+                            <span class="text-xs sm:text-sm font-semibold text-green-600">Conectada</span>
+                        </div>
+                        <div class="flex items-center justify-between p-2 sm:p-3 bg-white rounded-xl border border-gray-100 animate-fade-in-up delay-200">
+                            <div class="flex items-center">
+                                <div class="w-2 h-2 bg-green-500 rounded-full mr-2 sm:mr-3"></div>
+                                <span class="text-xs sm:text-sm font-medium text-gray-700">Servidor web</span>
+                            </div>
+                            <span class="text-xs sm:text-sm font-semibold text-green-600">Activo</span>
+                        </div>
+                        <div class="flex items-center justify-between p-2 sm:p-3 bg-white rounded-xl border border-gray-100 animate-fade-in-up delay-300">
+                            <div class="flex items-center">
+                                <div class="w-2 h-2 bg-blue-500 rounded-full mr-2 sm:mr-3"></div>
+                                <span class="text-xs sm:text-sm font-medium text-gray-700">Última actualización</span>
+                            </div>
+                            <span class="text-xs sm:text-sm font-semibold text-gray-900">Hace 5 min</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Información del Sistema -->
+            <div class="bg-gradient-to-br from-white to-gray-50 rounded-2xl shadow-lg border border-gray-200 p-4 sm:p-6 hover-lift animate-on-scroll relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-12 h-12 sm:w-16 sm:h-16 bg-blue-500/5 rounded-full -translate-y-6 sm:-translate-y-8 translate-x-6 sm:translate-x-8"></div>
+                <div class="relative z-10">
+                    <div class="flex flex-col sm:flex-row items-start sm:items-center mb-4 sm:mb-6 space-y-2 sm:space-y-0">
+                        <div class="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center mr-0 sm:mr-3 shadow-lg">
+                            <i class="fas fa-info-circle text-white text-sm sm:text-base"></i>
+                        </div>
+                        <h3 class="text-base sm:text-lg font-bold text-gray-900 text-center sm:text-left">Información del Sistema</h3>
+                    </div>
+                    <div class="space-y-2 sm:space-y-3">
+                        <div class="flex justify-between p-2 sm:p-3 bg-white rounded-xl border border-gray-100 animate-fade-in-up delay-100">
+                            <span class="text-xs sm:text-sm font-medium text-gray-700">Versión:</span>
+                            <span class="text-xs sm:text-sm font-semibold text-gray-900">1.0.0</span>
+                        </div>
+                        <div class="flex justify-between p-2 sm:p-3 bg-white rounded-xl border border-gray-100 animate-fade-in-up delay-200">
+                            <span class="text-xs sm:text-sm font-medium text-gray-700">Framework:</span>
+                            <span class="text-xs sm:text-sm font-semibold text-gray-900">Flask</span>
+                        </div>
+                        <div class="flex justify-between p-2 sm:p-3 bg-white rounded-xl border border-gray-100 animate-fade-in-up delay-300">
+                            <span class="text-xs sm:text-sm font-medium text-gray-700">Base de datos:</span>
+                            <span class="text-xs sm:text-sm font-semibold text-gray-900">SQLite</span>
+                        </div>
+                        <div class="flex justify-between p-2 sm:p-3 bg-white rounded-xl border border-gray-100 animate-fade-in-up delay-400">
+                            <span class="text-xs sm:text-sm font-medium text-gray-700">Frontend:</span>
+                            <span class="text-xs sm:text-sm font-semibold text-gray-900">Tailwind CSS</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Actividad Reciente -->
+    <div class="bg-gradient-to-br from-white to-gray-50 rounded-2xl shadow-lg border border-gray-200 p-4 sm:p-6 lg:p-8 hover-lift animate-on-scroll relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-16 h-16 sm:w-20 sm:h-20 bg-purple-500/5 rounded-full -translate-y-8 sm:-translate-y-10 translate-x-8 sm:translate-x-10"></div>
+        <div class="relative z-10">
+            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 sm:mb-8 space-y-3 sm:space-y-0">
+                <div class="flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-y-0">
+                    <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl flex items-center justify-center mr-0 sm:mr-4 shadow-lg">
+                        <i class="fas fa-history text-white text-sm sm:text-lg"></i>
+                    </div>
+                    <div class="text-center sm:text-left">
+                        <h3 class="text-xl sm:text-2xl font-bold text-gray-900 animate-fade-in-left">Actividad Reciente</h3>
+                        <p class="text-gray-600 text-sm sm:text-base">Últimas acciones en el sistema</p>
+                    </div>
+                </div>
+                <a href="#" class="inline-flex items-center px-3 sm:px-4 py-2 bg-purple-100 text-purple-700 rounded-xl font-semibold hover:bg-purple-200 transition-colors btn-press text-xs sm:text-sm">
+                    <i class="fas fa-external-link-alt mr-2"></i>Ver todo
+                </a>
+            </div>
+            
+            <div class="space-y-3 sm:space-y-4">
+                <div class="group bg-white rounded-xl p-3 sm:p-4 border border-gray-200 hover:border-purple-300 hover:shadow-lg transition-all cursor-pointer hover-lift animate-on-scroll">
+                    <div class="flex items-start sm:items-center space-y-2 sm:space-y-0">
+                        <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center mr-3 sm:mr-4 shadow-lg group-hover:scale-110 transition-transform flex-shrink-0">
+                            <i class="fas fa-user-plus text-white text-sm sm:text-base"></i>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-1 space-y-1 sm:space-y-0">
+                                <p class="font-semibold text-gray-900 text-sm sm:text-base">Nuevo empleado agregado</p>
+                                <span class="text-xs text-gray-400 bg-gray-100 px-2 py-1 rounded-full self-start sm:self-auto">Hace 2h</span>
+                            </div>
+                            <p class="text-xs sm:text-sm text-gray-600">Juan Pérez - Departamento de Ventas</p>
+                            <div class="flex items-center mt-2">
+                                <div class="w-2 h-2 bg-green-500 rounded-full mr-2"></div>
+                                <span class="text-xs text-green-600 font-medium">Completado</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="group bg-white rounded-xl p-3 sm:p-4 border border-gray-200 hover:border-blue-300 hover:shadow-lg transition-all cursor-pointer hover-lift animate-on-scroll">
+                    <div class="flex items-start sm:items-center space-y-2 sm:space-y-0">
+                        <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center mr-3 sm:mr-4 shadow-lg group-hover:scale-110 transition-transform flex-shrink-0">
+                            <i class="fas fa-sitemap text-white text-sm sm:text-base"></i>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-1 space-y-1 sm:space-y-0">
+                                <p class="font-semibold text-gray-900 text-sm sm:text-base">Departamento actualizado</p>
+                                <span class="text-xs text-gray-400 bg-gray-100 px-2 py-1 rounded-full self-start sm:self-auto">Hace 4h</span>
+                            </div>
+                            <p class="text-xs sm:text-sm text-gray-600">Recursos Humanos - Información modificada</p>
+                            <div class="flex items-center mt-2">
+                                <div class="w-2 h-2 bg-blue-500 rounded-full mr-2"></div>
+                                <span class="text-xs text-blue-600 font-medium">Actualizado</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="group bg-white rounded-xl p-3 sm:p-4 border border-gray-200 hover:border-purple-300 hover:shadow-lg transition-all cursor-pointer hover-lift animate-on-scroll">
+                    <div class="flex items-start sm:items-center space-y-2 sm:space-y-0">
+                        <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl flex items-center justify-center mr-3 sm:mr-4 shadow-lg group-hover:scale-110 transition-transform flex-shrink-0">
+                            <i class="fas fa-chart-bar text-white text-sm sm:text-base"></i>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-1 space-y-1 sm:space-y-0">
+                                <p class="font-semibold text-gray-900 text-sm sm:text-base">Reporte generado</p>
+                                <span class="text-xs text-gray-400 bg-gray-100 px-2 py-1 rounded-full self-start sm:self-auto">Hace 1d</span>
+                            </div>
+                            <p class="text-xs sm:text-sm text-gray-600">Estadísticas mensuales de empleados</p>
+                            <div class="flex items-center mt-2">
+                                <div class="w-2 h-2 bg-purple-500 rounded-full mr-2"></div>
+                                <span class="text-xs text-purple-600 font-medium">Generado</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

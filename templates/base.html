@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Sistema Administrativo{% endblock %}</title>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='favicon.png') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'sans': ['Montserrat', 'ui-sans-serif', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'Noto Sans', 'sans-serif'],
+                        'mont': ['Montserrat', 'sans-serif']
+                    },
+                    colors: {
+                        primary: {
+                            50: '#eff6ff',
+                            100: '#dbeafe',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                            900: '#1e3a8a'
+                        },
+                        accent: {
+                            50: '#ecfdf5',
+                            100: '#d1fae5',
+                            500: '#10b981',
+                            600: '#059669',
+                            700: '#047857'
+                        },
+                        gray: {
+                            50: '#f9fafb',
+                            100: '#f3f4f6',
+                            200: '#e5e7eb',
+                            300: '#d1d5db',
+                            400: '#9ca3af',
+                            500: '#6b7280',
+                            600: '#4b5563',
+                            700: '#374151',
+                            800: '#1f2937',
+                            900: '#111827'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Transiciones base */
+        .sidebar-transition {
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .content-transition {
+            transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Animaciones de entrada */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes fadeInRight {
+            from {
+                opacity: 0;
+                transform: translateX(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes slideInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+
+        /* Clases de animación */
+        .animate-fade-in-up {
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        .animate-fade-in-left {
+            animation: fadeInLeft 0.6s ease-out;
+        }
+
+        .animate-fade-in-right {
+            animation: fadeInRight 0.6s ease-out;
+        }
+
+        .animate-scale-in {
+            animation: scaleIn 0.5s ease-out;
+        }
+
+        .animate-slide-in-down {
+            animation: slideInDown 0.5s ease-out;
+        }
+
+        .animate-pulse {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+
+        /* Delays para animaciones escalonadas */
+        .delay-100 { animation-delay: 0.1s; }
+        .delay-200 { animation-delay: 0.2s; }
+        .delay-300 { animation-delay: 0.3s; }
+        .delay-400 { animation-delay: 0.4s; }
+        .delay-500 { animation-delay: 0.5s; }
+
+        /* Hover effects mejorados */
+        .hover-lift {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .hover-lift:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        .hover-scale {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .hover-scale:hover {
+            transform: scale(1.02);
+        }
+
+        /* Loading spinner */
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .animate-spin {
+            animation: spin 1s linear infinite;
+        }
+
+        /* Progress bar animation */
+        @keyframes progressFill {
+            from {
+                width: 0%;
+            }
+        }
+
+        .progress-animate {
+            animation: progressFill 1.5s ease-out;
+        }
+
+        /* Card stagger animation */
+        .card-stagger {
+            opacity: 0;
+            animation: fadeInUp 0.6s ease-out forwards;
+        }
+
+        /* Smooth scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Focus states mejorados */
+        .focus-ring:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.5);
+        }
+
+        /* Button press effect */
+        .btn-press:active {
+            transform: scale(0.95);
+        }
+
+        /* Estilos mejorados para formularios */
+        .form-input {
+            @apply w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm transition-all duration-200;
+            @apply focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500;
+            @apply hover:border-gray-400 focus:shadow-lg;
+        }
+
+        .form-input:focus {
+            transform: translateY(-1px);
+        }
+
+        .form-select {
+            @apply w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm transition-all duration-200;
+            @apply focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500;
+            @apply hover:border-gray-400 focus:shadow-lg;
+            @apply appearance-none bg-white;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+            background-position: right 0.75rem center;
+            background-repeat: no-repeat;
+            background-size: 1.5em 1.5em;
+            padding-right: 2.5rem;
+        }
+
+        .form-select:focus {
+            transform: translateY(-1px);
+        }
+
+        .form-select:hover {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%233b82f6' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+        }
+
+        /* Dropdown personalizado */
+        .custom-dropdown {
+            @apply relative inline-block w-full;
+        }
+
+        .custom-dropdown-toggle {
+            @apply w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm transition-all duration-200;
+            @apply focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500;
+            @apply hover:border-gray-400 focus:shadow-lg;
+            @apply flex items-center justify-between;
+        }
+
+        .custom-dropdown-menu {
+            @apply absolute z-50 w-full mt-1 bg-white border border-gray-200 rounded-xl shadow-xl;
+            @apply opacity-0 invisible transform scale-95 -translate-y-2;
+            @apply transition-all duration-200 ease-out;
+        }
+
+        .custom-dropdown-menu.show {
+            @apply opacity-100 visible transform scale-100 translate-y-0;
+        }
+
+        .custom-dropdown-item {
+            @apply px-4 py-3 text-sm text-gray-700 hover:bg-primary-50 hover:text-primary-700;
+            @apply transition-colors duration-150 cursor-pointer;
+        }
+
+        .custom-dropdown-item:first-child {
+            @apply rounded-t-xl;
+        }
+
+        .custom-dropdown-item:last-child {
+            @apply rounded-b-xl;
+        }
+
+        .custom-dropdown-item.selected {
+            @apply bg-primary-100 text-primary-700 font-medium;
+        }
+
+        /* Estilos para inputs con iconos */
+        .input-with-icon {
+            @apply relative;
+        }
+
+        .input-with-icon input {
+            @apply pl-12;
+        }
+
+        .input-with-icon .icon {
+            @apply absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400;
+            @apply pointer-events-none transition-colors duration-200;
+        }
+
+        .input-with-icon input:focus + .icon {
+            @apply text-primary-500;
+        }
+
+        /* Estilos para labels */
+        .form-label {
+            @apply block text-sm font-semibold text-gray-700 mb-2;
+            @apply transition-colors duration-200;
+        }
+
+        .form-label.required::after {
+            content: " *";
+            @apply text-red-500;
+        }
+
+        /* Estilos para grupos de formulario */
+        .form-group {
+            @apply space-y-2;
+        }
+
+        .form-group.error .form-input,
+        .form-group.error .form-select {
+            @apply border-red-300 focus:ring-red-500 focus:border-red-500;
+        }
+
+        .form-group.error .form-label {
+            @apply text-red-700;
+        }
+
+        .form-error {
+            @apply text-sm text-red-600 mt-1 flex items-center;
+        }
+
+        .form-error::before {
+            content: "⚠";
+            @apply mr-1;
+        }
+
+        /* Estilos para botones de formulario */
+        .btn-primary {
+            @apply inline-flex items-center px-6 py-3 bg-gradient-to-r from-primary-600 to-primary-700;
+            @apply text-white font-semibold rounded-xl shadow-lg;
+            @apply hover:from-primary-700 hover:to-primary-800 focus:outline-none;
+            @apply focus:ring-2 focus:ring-offset-2 focus:ring-primary-500;
+            @apply transition-all duration-200 transform hover:scale-105 hover:shadow-xl;
+        }
+
+        .btn-secondary {
+            @apply inline-flex items-center px-6 py-3 border border-gray-300;
+            @apply text-gray-700 font-semibold rounded-xl shadow-sm;
+            @apply hover:bg-gray-50 focus:outline-none;
+            @apply focus:ring-2 focus:ring-offset-2 focus:ring-primary-500;
+            @apply transition-all duration-200 transform hover:scale-105;
+        }
+
+        /* Estilos para checkboxes y radios personalizados */
+        .custom-checkbox {
+            @apply relative inline-flex items-center cursor-pointer;
+        }
+
+        .custom-checkbox input {
+            @apply sr-only;
+        }
+
+        .custom-checkbox .checkmark {
+            @apply w-5 h-5 border-2 border-gray-300 rounded transition-all duration-200;
+            @apply flex items-center justify-center;
+        }
+
+        .custom-checkbox input:checked + .checkmark {
+            @apply bg-primary-500 border-primary-500;
+        }
+
+        .custom-checkbox input:checked + .checkmark::after {
+            content: "✓";
+            @apply text-white text-xs font-bold;
+        }
+
+        .custom-checkbox:hover .checkmark {
+            @apply border-primary-400;
+        }
+
+        /* Estilos para tooltips */
+        .tooltip {
+            @apply relative inline-block;
+        }
+
+        .tooltip .tooltip-text {
+            @apply invisible absolute z-50 px-3 py-2 text-sm text-white bg-gray-900 rounded-lg;
+            @apply opacity-0 transition-opacity duration-300;
+            @apply whitespace-nowrap;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .tooltip .tooltip-text::after {
+            content: "";
+            @apply absolute top-full left-1/2 transform -translate-x-1/2;
+            border: 5px solid transparent;
+            border-top-color: #111827;
+        }
+
+        .tooltip:hover .tooltip-text {
+            @apply visible opacity-100;
+        }
+
+        /* Estilos para loading states */
+        .loading {
+            @apply relative;
+        }
+
+        .loading::after {
+            content: "";
+            @apply absolute inset-0 bg-white bg-opacity-75 rounded-xl;
+            @apply flex items-center justify-center;
+        }
+
+        .loading::before {
+            content: "";
+            @apply absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2;
+            @apply w-6 h-6 border-2 border-primary-500 border-t-transparent rounded-full animate-spin;
+            z-index: 10;
+        }
+
+        /* Responsive improvements */
+        @media (max-width: 640px) {
+            .sidebar-transition {
+                width: 100vw;
+                max-width: 320px;
+            }
+            
+            .content-transition {
+                margin-left: 0 !important;
+            }
+            
+            .form-input, .form-select {
+                @apply text-base;
+            }
+            
+            .btn-primary, .btn-secondary {
+                @apply w-full justify-center;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .grid-responsive {
+                @apply grid-cols-1;
+            }
+            
+            .flex-responsive {
+                @apply flex-col;
+            }
+            
+            .text-responsive {
+                @apply text-lg;
+            }
+            
+            .p-responsive {
+                @apply p-4;
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .lg\:grid-cols-3 {
+                @apply grid-cols-1 md:grid-cols-2;
+            }
+            
+            .lg\:grid-cols-4 {
+                @apply grid-cols-1 md:grid-cols-2;
+            }
+        }
+        .form-input{
+            color: red;
+        }
+
+        /* Aplicar Montserrat como fuente principal */
+        body {
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        /* Asegurar que todos los elementos usen Montserrat */
+        * {
+            font-family: inherit;
+        }
+
+        /* Clase específica para Montserrat */
+        .font-mont {
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        /* Mejorar la legibilidad de Montserrat */
+        .font-mont {
+            font-feature-settings: 'liga' 1, 'kern' 1;
+            text-rendering: optimizeLegibility;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <div class="flex h-screen">
+        <!-- Sidebar -->
+        <div id="sidebar" class="sidebar-transition fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-xl transform -translate-x-full lg:translate-x-0">
+            <!-- Logo y Header -->
+            <div class="flex items-center justify-between h-16 px-4 sm:px-6 border-b border-gray-200">
+                <div class="flex items-center">
+                    <div class="rounded-lg flex items-center justify-center mr-3">
+                        <img src="{{ url_for('static', filename='favicon.png') }}" alt="Logo" class="w-10 h-10">
+                    </div>
+                    <h1 class="text-lg sm:text-xl font-bold text-gray-900">Innovatex</h1>
+                </div>
+                <button id="closeSidebar" class="lg:hidden text-gray-400 hover:text-gray-600 p-2 rounded-lg hover:bg-gray-100">
+                    <i class="fas fa-times text-lg"></i>
+                </button>
+            </div>
+
+            <!-- Menú de navegación -->
+            <nav class="mt-6 px-3 overflow-y-auto h-[calc(100vh-8rem)]">
+                <div class="space-y-1">
+                    <a href="{{ url_for('index') }}" class="group flex items-center px-3 py-3 text-sm font-medium rounded-lg transition-colors {% if request.endpoint == 'index' %}bg-primary-50 text-primary-700 {% else %}text-gray-700 hover:bg-gray-50 hover:text-gray-900{% endif %}">
+                        <i class="fas fa-home mr-3 text-lg w-5"></i>
+                        <span class="truncate">Dashboard</span>
+                    </a>
+                    
+                    <a href="{{ url_for('empleados') }}" class="group flex items-center px-3 py-3 text-sm font-medium rounded-lg transition-colors {% if request.endpoint == 'empleados' %}bg-primary-50 text-primary-700 {% else %}text-gray-700 hover:bg-gray-50 hover:text-gray-900{% endif %}">
+                        <i class="fas fa-users mr-3 text-lg w-5"></i>
+                        <span class="truncate">Empleados</span>
+                    </a>
+                    
+                    <a href="{{ url_for('departamentos') }}" class="group flex items-center px-3 py-3 text-sm font-medium rounded-lg transition-colors {% if request.endpoint == 'departamentos' %}bg-primary-50 text-primary-700 {% else %}text-gray-700 hover:bg-gray-50 hover:text-gray-900{% endif %}">
+                        <i class="fas fa-sitemap mr-3 text-lg w-5"></i>
+                        <span class="truncate">Departamentos</span>
+                    </a>
+                </div>
+
+                <!-- Separador -->
+                <div class="mt-8 pt-6 border-t border-gray-200">
+                    <div class="px-3 mb-2">
+                        <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Acciones Rápidas</h3>
+                    </div>
+                    <div class="space-y-1">
+                        <a href="{{ url_for('nuevo_empleado') }}" class="group flex items-center px-3 py-3 text-sm font-medium text-gray-700 rounded-lg hover:bg-accent-50 hover:text-accent-700 transition-colors">
+                            <i class="fas fa-user-plus mr-3 text-lg w-5"></i>
+                            <span class="truncate">Nuevo Empleado</span>
+                        </a>
+                        <a href="{{ url_for('nuevo_departamento') }}" class="group flex items-center px-3 py-3 text-sm font-medium text-gray-700 rounded-lg hover:bg-accent-50 hover:text-accent-700 transition-colors">
+                            <i class="fas fa-plus mr-3 text-lg w-5"></i>
+                            <span class="truncate">Nuevo Departamento</span>
+                        </a>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Footer del sidebar -->
+            <div class="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-200 bg-white">
+                <div class="flex items-center">
+                    <div class="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center mr-3">
+                        <i class="fas fa-user text-gray-600"></i>
+                    </div>
+                    <div class="min-w-0 flex-1">
+                        <p class="text-sm font-medium text-gray-900 truncate">Administrador</p>
+                        <p class="text-xs text-gray-500 truncate">Sistema Admin</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Overlay para móvil -->
+        <div id="sidebarOverlay" class="fixed inset-0 bg-gray-600 bg-opacity-75 z-40 lg:hidden hidden"></div>
+
+        <!-- Contenido principal -->
+        <div class="content-transition flex-1 lg:ml-64 min-w-0">
+            <!-- Header superior -->
+            <header class="bg-white shadow-sm border-b border-gray-200">
+                <div class="flex items-center justify-between h-16 px-4 sm:px-6 lg:px-8">
+                    <div class="flex items-center min-w-0 flex-1">
+                        <button id="openSidebar" class="lg:hidden p-2 rounded-md text-gray-400 hover:text-gray-600 hover:bg-gray-100 mr-3">
+                            <i class="fas fa-bars text-lg"></i>
+                        </button>
+                        <h2 class="text-lg font-semibold text-gray-900 truncate">{% block page_title %}Dashboard{% endblock %}</h2>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Contenido de la página -->
+            <main class="p-4 sm:p-6 lg:p-8 min-h-[calc(100vh-4rem)]">
+                <!-- Mensajes flash -->
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        <div class="mb-6 space-y-3">
+                            {% for category, message in messages %}
+                                <div class="flex items-center p-4 rounded-lg border {% if category == 'success' %}bg-green-50 border-green-200 text-green-800{% else %}bg-red-50 border-red-200 text-red-800{% endif %}">
+                                    <div class="flex-shrink-0">
+                                        {% if category == 'success' %}
+                                            <i class="fas fa-check-circle text-green-400"></i>
+                                        {% else %}
+                                            <i class="fas fa-exclamation-circle text-red-400"></i>
+                                        {% endif %}
+                                    </div>
+                                    <div class="ml-3 min-w-0 flex-1">
+                                        <p class="text-sm font-medium truncate">{{ message }}</p>
+                                    </div>
+                                    <div class="ml-auto pl-3 flex-shrink-0">
+                                        <button class="text-gray-400 hover:text-gray-600 p-1 rounded" onclick="this.parentElement.parentElement.remove()">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                {% endwith %}
+
+                {% block content %}{% endblock %}
+            </main>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        // Funcionalidad del sidebar
+        const sidebar = document.getElementById('sidebar');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+        const openSidebarBtn = document.getElementById('openSidebar');
+        const closeSidebarBtn = document.getElementById('closeSidebar');
+
+        function openSidebar() {
+            sidebar.classList.remove('-translate-x-full');
+            sidebarOverlay.classList.remove('hidden');
+            // Animación de entrada para el overlay
+            setTimeout(() => {
+                sidebarOverlay.classList.add('animate-fade-in-up');
+            }, 10);
+        }
+
+        function closeSidebar() {
+            sidebar.classList.add('-translate-x-full');
+            sidebarOverlay.classList.add('hidden');
+            sidebarOverlay.classList.remove('animate-fade-in-up');
+        }
+
+        openSidebarBtn.addEventListener('click', openSidebar);
+        closeSidebarBtn.addEventListener('click', closeSidebar);
+        sidebarOverlay.addEventListener('click', closeSidebar);
+
+        // Cerrar sidebar al hacer clic en un enlace (móvil)
+        document.querySelectorAll('#sidebar a').forEach(link => {
+            link.addEventListener('click', () => {
+                if (window.innerWidth < 1024) {
+                    closeSidebar();
+                }
+            });
+        });
+
+        // Cerrar sidebar al cambiar el tamaño de la ventana
+        window.addEventListener('resize', () => {
+            if (window.innerWidth >= 1024) {
+                sidebar.classList.remove('-translate-x-full');
+                sidebarOverlay.classList.add('hidden');
+            } else {
+                sidebar.classList.add('-translate-x-full');
+            }
+        });
+
+        // Animaciones de entrada para elementos
+        function animateOnScroll() {
+            const elements = document.querySelectorAll('.animate-on-scroll');
+            elements.forEach(element => {
+                const elementTop = element.getBoundingClientRect().top;
+                const elementVisible = 150;
+                
+                if (elementTop < window.innerHeight - elementVisible) {
+                    element.classList.add('animate-fade-in-up');
+                }
+            });
+        }
+
+        // Animación escalonada para tarjetas
+        function animateCards() {
+            const cards = document.querySelectorAll('.card-stagger');
+            cards.forEach((card, index) => {
+                card.style.animationDelay = `${index * 0.1}s`;
+                card.classList.add('animate-fade-in-up');
+            });
+        }
+
+        // Animación de contadores
+        function animateCounters() {
+            const counters = document.querySelectorAll('.animate-counter');
+            counters.forEach(counter => {
+                const target = parseInt(counter.getAttribute('data-target'));
+                const duration = 2000; // 2 segundos
+                const increment = target / (duration / 16); // 60fps
+                let current = 0;
+
+                const updateCounter = () => {
+                    current += increment;
+                    if (current < target) {
+                        counter.textContent = Math.floor(current);
+                        requestAnimationFrame(updateCounter);
+                    } else {
+                        counter.textContent = target;
+                    }
+                };
+
+                updateCounter();
+            });
+        }
+
+        // Efectos hover mejorados
+        function initHoverEffects() {
+            const hoverElements = document.querySelectorAll('.hover-lift, .hover-scale');
+            hoverElements.forEach(element => {
+                element.addEventListener('mouseenter', function() {
+                    this.style.transition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+                });
+            });
+        }
+
+        // Animación de barras de progreso
+        function animateProgressBars() {
+            const progressBars = document.querySelectorAll('.progress-animate');
+            progressBars.forEach(bar => {
+                const width = bar.style.width;
+                bar.style.width = '0%';
+                setTimeout(() => {
+                    bar.style.width = width;
+                }, 500);
+            });
+        }
+
+        // Efecto de carga para botones
+        function initButtonEffects() {
+            const buttons = document.querySelectorAll('.btn-press');
+            buttons.forEach(button => {
+                button.addEventListener('click', function() {
+                    this.style.transform = 'scale(0.95)';
+                    setTimeout(() => {
+                        this.style.transform = 'scale(1)';
+                    }, 150);
+                });
+            });
+        }
+
+        // Animación de notificaciones
+        function showNotification(message, type = 'success') {
+            const notification = document.createElement('div');
+            notification.className = `fixed top-4 right-4 z-50 p-4 rounded-xl shadow-lg transform translate-x-full transition-transform duration-300 max-w-sm ${
+                type === 'success' ? 'bg-green-500 text-white' : 'bg-red-500 text-white'
+            }`;
+            notification.innerHTML = `
+                <div class="flex items-center">
+                    <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'} mr-2 flex-shrink-0"></i>
+                    <span class="truncate">${message}</span>
+                </div>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // Animar entrada
+            setTimeout(() => {
+                notification.classList.remove('translate-x-full');
+            }, 100);
+            
+            // Animar salida
+            setTimeout(() => {
+                notification.classList.add('translate-x-full');
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 300);
+            }, 3000);
+        }
+
+        // Inicializar todas las animaciones
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animar elementos al cargar la página
+            setTimeout(() => {
+                animateCards();
+                animateCounters();
+                animateProgressBars();
+            }, 100);
+
+            // Inicializar efectos
+            initHoverEffects();
+            initButtonEffects();
+
+            // Observador de intersección para animaciones al hacer scroll
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('animate-fade-in-up');
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            // Observar elementos con animación al scroll
+            document.querySelectorAll('.animate-on-scroll').forEach(el => {
+                observer.observe(el);
+            });
+
+            // Efecto de partículas para el dashboard (opcional)
+            if (window.location.pathname === '/') {
+                createParticleEffect();
+            }
+        });
+
+        // Efecto de partículas para el dashboard
+        function createParticleEffect() {
+            const dashboard = document.querySelector('.bg-gradient-to-r');
+            if (!dashboard) return;
+
+            for (let i = 0; i < 20; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'absolute w-1 h-1 bg-white bg-opacity-30 rounded-full animate-pulse';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 2 + 's';
+                particle.style.animationDuration = (Math.random() * 2 + 1) + 's';
+                dashboard.appendChild(particle);
+            }
+        }
+
+        // Función global para mostrar notificaciones
+        window.showNotification = showNotification;
+
+        // Funcionalidad para dropdowns personalizados
+        function initCustomDropdowns() {
+            const dropdowns = document.querySelectorAll('.custom-dropdown');
+            
+            dropdowns.forEach(dropdown => {
+                const toggle = dropdown.querySelector('.custom-dropdown-toggle');
+                const menu = dropdown.querySelector('.custom-dropdown-menu');
+                const items = dropdown.querySelectorAll('.custom-dropdown-item');
+                
+                if (toggle && menu) {
+                    toggle.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        
+                        // Cerrar otros dropdowns
+                        document.querySelectorAll('.custom-dropdown-menu.show').forEach(openMenu => {
+                            if (openMenu !== menu) {
+                                openMenu.classList.remove('show');
+                            }
+                        });
+                        
+                        menu.classList.toggle('show');
+                    });
+                    
+                    // Seleccionar item
+                    items.forEach(item => {
+                        item.addEventListener('click', () => {
+                            const value = item.getAttribute('data-value');
+                            const text = item.textContent;
+                            
+                            toggle.querySelector('.selected-text').textContent = text;
+                            toggle.querySelector('input').value = value;
+                            
+                            // Actualizar estado visual
+                            items.forEach(i => i.classList.remove('selected'));
+                            item.classList.add('selected');
+                            
+                            menu.classList.remove('show');
+                        });
+                    });
+                }
+            });
+            
+            // Cerrar dropdowns al hacer clic fuera
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('.custom-dropdown')) {
+                    document.querySelectorAll('.custom-dropdown-menu.show').forEach(menu => {
+                        menu.classList.remove('show');
+                    });
+                }
+            });
+        }
+
+        // Mejorar experiencia de formularios
+        function enhanceFormExperience() {
+            // Auto-resize textareas
+            const textareas = document.querySelectorAll('textarea');
+            textareas.forEach(textarea => {
+                textarea.addEventListener('input', function() {
+                    this.style.height = 'auto';
+                    this.style.height = this.scrollHeight + 'px';
+                });
+            });
+            
+            // Validación en tiempo real
+            const inputs = document.querySelectorAll('.form-input, .form-select');
+            inputs.forEach(input => {
+                input.addEventListener('blur', function() {
+                    validateField(this);
+                });
+                
+                input.addEventListener('input', function() {
+                    if (this.classList.contains('error')) {
+                        validateField(this);
+                    }
+                });
+            });
+        }
+
+        function validateField(field) {
+            const group = field.closest('.form-group');
+            const errorElement = group.querySelector('.form-error');
+            
+            // Remover estado de error previo
+            group.classList.remove('error');
+            if (errorElement) {
+                errorElement.remove();
+            }
+            
+            // Validaciones básicas
+            let isValid = true;
+            let errorMessage = '';
+            
+            if (field.hasAttribute('required') && !field.value.trim()) {
+                isValid = false;
+                errorMessage = 'Este campo es obligatorio';
+            } else if (field.type === 'email' && field.value) {
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(field.value)) {
+                    isValid = false;
+                    errorMessage = 'Ingresa un email válido';
+                }
+            } else if (field.type === 'tel' && field.value) {
+                const phoneRegex = /^[\+]?[1-9][\d]{0,15}$/;
+                if (!phoneRegex.test(field.value.replace(/\s/g, ''))) {
+                    isValid = false;
+                    errorMessage = 'Ingresa un teléfono válido';
+                }
+            }
+            
+            if (!isValid) {
+                group.classList.add('error');
+                const error = document.createElement('div');
+                error.className = 'form-error';
+                error.textContent = errorMessage;
+                group.appendChild(error);
+            }
+        }
+
+        // Mostrar notificaciones flash de Flask
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    showNotification('{{ message }}', '{{ category }}');
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        // Función para mostrar la hora actual
+        function updateCurrentTime() {
+            const timeElement = document.getElementById('current-time');
+            if (timeElement) {
+                const now = new Date();
+                const timeString = now.toLocaleTimeString('es-ES', {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    hour12: false
+                });
+                timeElement.textContent = timeString;
+            }
+        }
+
+        // Inicializar funcionalidades adicionales
+        document.addEventListener('DOMContentLoaded', function() {
+            initCustomDropdowns();
+            enhanceFormExperience();
+            
+            // Actualizar hora cada segundo
+            updateCurrentTime();
+            setInterval(updateCurrentTime, 1000);
+        });
+    </script>
+</body>
+</html> 

@@ -1,0 +1,134 @@
+{% extends "base.html" %}
+
+{% block title %}Nuevo Empleado - Sistema Administrativo{% endblock %}
+{% block page_title %}Nuevo Empleado{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto">
+    <!-- Header -->
+    <div class="bg-gradient-to-r from-primary-600 to-primary-700 rounded-2xl shadow-lg p-4 sm:p-6 text-white mb-6 sm:mb-8 relative overflow-hidden animate-scale-in">
+        <div class="flex flex-col sm:flex-row items-start sm:items-center relative z-10 space-y-4 sm:space-y-0">
+            <div class="w-10 h-10 sm:w-12 sm:h-12 bg-white bg-opacity-20 rounded-xl flex items-center justify-center mr-0 sm:mr-4 hover-scale animate-fade-in-left">
+                <i class="fas fa-user-plus text-xl sm:text-2xl"></i>
+            </div>
+            <div class="animate-fade-in-right text-center sm:text-left">
+                <h1 class="text-2xl sm:text-3xl font-bold mb-2">Nuevo Empleado</h1>
+                <p class="text-primary-100 text-sm sm:text-base">Agregar un nuevo empleado al sistema administrativo</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Formulario -->
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-8 hover-lift animate-on-scroll">
+        <form method="POST" class="space-y-6 sm:space-y-8">
+            <!-- Información personal -->
+            <div class="bg-gray-50 rounded-xl p-4 sm:p-6 animate-on-scroll">
+                <div class="flex flex-col sm:flex-row items-start sm:items-center mb-4 sm:mb-6 space-y-2 sm:space-y-0">
+                    <div class="w-8 h-8 sm:w-10 sm:h-10 bg-primary-100 rounded-lg flex items-center justify-center mr-0 sm:mr-3 hover-scale">
+                        <i class="fas fa-user text-primary-600 text-sm sm:text-base"></i>
+                    </div>
+                    <h3 class="text-lg sm:text-xl font-semibold text-gray-900 text-center sm:text-left">Información Personal</h3>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+                    <div class="form-group animate-fade-in-up delay-100">
+                        <label for="nombre" class="form-label required">Nombre</label>
+                        <input type="text" id="nombre" name="nombre" required
+                               placeholder="Ingresa el nombre del empleado"
+                               class="form-input p-2 rounded-lg w-full bg-blue-100">
+                    </div>
+                    <div class="form-group animate-fade-in-up delay-200">
+                        <label for="apellido" class="form-label required">Apellido</label>
+                        <input type="text" id="apellido" name="apellido" required
+                               placeholder="Ingresa el apellido del empleado"
+                               class="form-input p-2 rounded-lg w-full bg-blue-100">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Información de contacto -->
+            <div class="bg-gray-50 rounded-xl p-4 sm:p-6 animate-on-scroll">
+                <div class="flex flex-col sm:flex-row items-start sm:items-center mb-4 sm:mb-6 space-y-2 sm:space-y-0">
+                    <div class="w-8 h-8 sm:w-10 sm:h-10 bg-green-100 rounded-lg flex items-center justify-center mr-0 sm:mr-3 hover-scale">
+                        <i class="fas fa-envelope text-green-600 text-sm sm:text-base"></i>
+                    </div>
+                    <h3 class="text-lg sm:text-xl font-semibold text-gray-900 text-center sm:text-left">Información de Contacto</h3>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+                    <div class="form-group animate-fade-in-up delay-100">
+                        <label for="email" class="form-label required">Email</label>
+                        <input type="email" id="email" name="email" required
+                               placeholder="empleado@empresa.com"
+                               class="form-input p-2 rounded-lg w-full bg-accent-100">
+                    </div>
+                    <div class="form-group animate-fade-in-up delay-200">
+                        <label for="telefono" class="form-label">Teléfono</label>
+                        <input type="tel" id="telefono" name="telefono"
+                               placeholder="+1 (555) 123-4567"
+                               class="form-input p-2 rounded-lg w-full bg-accent-100">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Información laboral -->
+            <div class="bg-gray-50 rounded-xl p-4 sm:p-6 animate-on-scroll">
+                <div class="flex flex-col sm:flex-row items-start sm:items-center mb-4 sm:mb-6 space-y-2 sm:space-y-0">
+                    <div class="w-8 h-8 sm:w-10 sm:h-10 bg-purple-100 rounded-lg flex items-center justify-center mr-0 sm:mr-3 hover-scale">
+                        <i class="fas fa-briefcase text-purple-600 text-sm sm:text-base"></i>
+                    </div>
+                    <h3 class="text-lg sm:text-xl font-semibold text-gray-900 text-center sm:text-left">Información Laboral</h3>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+                    <div class="form-group animate-fade-in-up delay-100 sm:col-span-1">
+                        <label for="departamento" class="form-label p-2">Departamento</label>
+                        <select id="departamento" name="departamento" class="mt-2 rounded-lg w-full bg-gray-100">
+                            <option value="">Seleccionar departamento</option>
+                            {% for dept in departamentos %}
+                            <option value="{{ dept.nombre }}">{{ dept.nombre }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group animate-fade-in-up delay-200 sm:col-span-1">
+                        <label for="cargo" class="form-label">Cargo</label>
+                        <input type="text" id="cargo" name="cargo"
+                               placeholder="Ej: Desarrollador, Gerente, etc."
+                               class="form-input p-2 rounded-lg w-full bg-gray-100">
+                    </div>
+                    <div class="form-group animate-fade-in-up delay-300 sm:col-span-1">
+                        <label for="salario" class="form-label">Salario</label>
+                        <div class="input-with-icon">
+                            <input type="number" id="salario" name="salario" step="0.01" min="0"
+                                   placeholder="0.00"
+                                   class="form-input p-2 rounded-lg w-90 bg-gray-100">
+                            <span class="icon text-gray-500">$</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Información adicional -->
+            <div class="bg-blue-50 rounded-xl p-4 sm:p-6 border border-blue-200 animate-on-scroll">
+                <div class="flex items-center mb-3 sm:mb-4 justify-center sm:justify-start">
+                    <i class="fas fa-info-circle text-blue-600 mr-2 animate-pulse text-sm sm:text-base"></i>
+                    <h4 class="text-sm font-medium text-blue-900">Información Adicional</h4>
+                </div>
+                <ul class="text-xs sm:text-sm text-blue-800 space-y-1 text-center sm:text-left">
+                    <li class="animate-fade-in-up delay-100">• Los campos marcados con <span class="text-red-500">*</span> son obligatorios</li>
+                    <li class="animate-fade-in-up delay-200">• El email debe ser único en el sistema</li>
+                    <li class="animate-fade-in-up delay-300">• El empleado será creado como activo por defecto</li>
+                    <li class="animate-fade-in-up delay-400">• La fecha de contratación se establecerá automáticamente</li>
+                </ul>
+            </div>
+
+            <!-- Botones de acción -->
+            <div class="flex flex-col sm:flex-row items-center justify-between pt-6 sm:pt-8 border-t border-gray-200 space-y-4 sm:space-y-0">
+                <a href="{{ url_for('empleados') }}" class="btn-secondary w-full sm:w-auto text-center">
+                    <i class="fas fa-arrow-left mr-2"></i>Volver a Empleados
+                </a>
+                <button type="submit" class="btn-primary w-full sm:w-auto text-center">
+                    <i class="fas fa-save mr-2"></i>Guardar Empleado
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %} 

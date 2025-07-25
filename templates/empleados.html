@@ -1,0 +1,146 @@
+{% extends "base.html" %}
+
+{% block title %}Empleados - Sistema Administrativo{% endblock %}
+{% block page_title %}Empleados{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <!-- Header con estadísticas -->
+    <div class="bg-gradient-to-r from-primary-600 to-primary-700 rounded-2xl shadow-lg p-4 sm:p-6 text-white relative overflow-hidden animate-scale-in">
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between relative z-10 space-y-4 sm:space-y-0">
+            <div class="animate-fade-in-left">
+                <h1 class="text-2xl sm:text-3xl font-bold mb-2">Gestión de Empleados</h1>
+                <p class="text-primary-100 text-sm sm:text-base">Administra la información de todos los empleados de la empresa</p>
+            </div>
+            <a href="{{ url_for('nuevo_empleado') }}" class="bg-white bg-opacity-20 hover:bg-opacity-30 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-xl transition-all duration-200 font-medium hover-lift btn-press animate-fade-in-right text-sm sm:text-base w-full sm:w-auto text-center">
+                <i class="fas fa-plus mr-2"></i>Nuevo Empleado
+            </a>
+        </div>
+    </div>
+
+    <!-- Filtros y búsqueda -->
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-6 hover-lift animate-on-scroll">
+        <div class="flex flex-col space-y-4 sm:space-y-0 sm:flex-row sm:items-center sm:justify-between">
+            <div class="flex flex-col sm:flex-row items-start sm:items-center space-y-3 sm:space-y-0 sm:space-x-4 w-full sm:w-auto">
+                <div class="input-with-icon animate-fade-in-up delay-100 w-full sm:w-64">
+                    <input type="text" placeholder="Buscar empleados..." class="form-input">
+                    <i class="fas fa-search icon"></i>
+                </div>
+                <select class="animate-fade-in-up delay-200 w-full sm:w-auto p-2 rounded-lg">
+                    <option value="">Todos los departamentos</option>
+                    <option value="recursos-humanos">Recursos Humanos</option>
+                    <option value="tecnologia">Tecnología</option>
+                    <option value="ventas">Ventas</option>
+                </select>
+            </div>
+            <div class="flex items-center space-x-2 animate-fade-in-up delay-300">
+                <span class="text-sm text-gray-600">{{ empleados|length }} empleados</span>
+                <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Lista de empleados -->
+    {% if empleados %}
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+        {% for empleado in empleados %}
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-6 hover-lift card-stagger animate-on-scroll">
+            <!-- Header de la tarjeta -->
+            <div class="flex items-start sm:items-center justify-between mb-4">
+                <div class="flex items-center min-w-0 flex-1">
+                    <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-primary-500 to-primary-600 rounded-xl flex items-center justify-center mr-3 hover-scale flex-shrink-0">
+                        <span class="text-white font-semibold text-sm sm:text-lg">
+                            {{ empleado.nombre[0] }}{{ empleado.apellido[0] }}
+                        </span>
+                    </div>
+                    <div class="min-w-0 flex-1">
+                        <h3 class="font-semibold text-gray-900 text-sm sm:text-base truncate">{{ empleado.nombre }} {{ empleado.apellido }}</h3>
+                        <p class="text-xs sm:text-sm text-gray-500">ID: {{ empleado.id }}</p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-2 flex-shrink-0 ml-2">
+                    {% if empleado.activo %}
+                        <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 animate-pulse">
+                            <i class="fas fa-check mr-1"></i>Activo
+                        </span>
+                    {% else %}
+                        <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                            <i class="fas fa-times mr-1"></i>Inactivo
+                        </span>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Información del empleado -->
+            <div class="space-y-2 sm:space-y-3">
+                <div class="flex items-center text-xs sm:text-sm">
+                    <i class="fas fa-envelope text-gray-400 w-4 mr-3 flex-shrink-0"></i>
+                    <span class="text-gray-700 truncate">{{ empleado.email }}</span>
+                </div>
+                
+                {% if empleado.telefono %}
+                <div class="flex items-center text-xs sm:text-sm">
+                    <i class="fas fa-phone text-gray-400 w-4 mr-3 flex-shrink-0"></i>
+                    <span class="text-gray-700 truncate">{{ empleado.telefono }}</span>
+                </div>
+                {% endif %}
+                
+                <div class="flex items-center text-xs sm:text-sm">
+                    <i class="fas fa-sitemap text-gray-400 w-4 mr-3 flex-shrink-0"></i>
+                    <span class="text-gray-700 truncate">{{ empleado.departamento or 'Sin asignar' }}</span>
+                </div>
+                
+                {% if empleado.cargo %}
+                <div class="flex items-center text-xs sm:text-sm">
+                    <i class="fas fa-briefcase text-gray-400 w-4 mr-3 flex-shrink-0"></i>
+                    <span class="text-gray-700 truncate">{{ empleado.cargo }}</span>
+                </div>
+                {% endif %}
+                
+                {% if empleado.salario %}
+                <div class="flex items-center text-xs sm:text-sm">
+                    <i class="fas fa-dollar-sign text-gray-400 w-4 mr-3 flex-shrink-0"></i>
+                    <span class="text-gray-700 font-medium truncate">${{ "{:,.2f}".format(empleado.salario) }}</span>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Acciones -->
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mt-4 sm:mt-6 pt-4 border-t border-gray-100 space-y-3 sm:space-y-0">
+                <div class="flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-y-0 sm:space-x-2">
+                    <a href="{{ url_for('editar_empleado', id=empleado.id) }}" 
+                       class="inline-flex items-center px-3 py-1.5 text-xs sm:text-sm font-medium text-primary-600 bg-primary-50 rounded-lg hover:bg-primary-100 transition-colors btn-press w-full sm:w-auto justify-center">
+                        <i class="fas fa-edit mr-1.5"></i>Editar
+                    </a>
+                    {% if empleado.activo %}
+                    <form method="POST" action="{{ url_for('eliminar_empleado', id=empleado.id) }}" 
+                          class="inline w-full sm:w-auto" onsubmit="return confirm('¿Estás seguro de desactivar este empleado?')">
+                        <button type="submit" class="inline-flex items-center px-3 py-1.5 text-xs sm:text-sm font-medium text-red-600 bg-red-50 rounded-lg hover:bg-red-100 transition-colors btn-press w-full sm:w-auto justify-center">
+                            <i class="fas fa-trash mr-1.5"></i>Desactivar
+                        </button>
+                    </form>
+                    {% endif %}
+                </div>
+                <div class="text-xs text-gray-400 text-center sm:text-right">
+                    {{ empleado.fecha_contratacion.strftime('%d/%m/%Y') if empleado.fecha_contratacion else 'Sin fecha' }}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <!-- Estado vacío -->
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-8 sm:p-12 text-center hover-lift animate-on-scroll">
+        <div class="mx-auto w-20 h-20 sm:w-24 sm:h-24 bg-gray-100 rounded-full flex items-center justify-center mb-4 sm:mb-6 hover-scale">
+            <i class="fas fa-users text-3xl sm:text-4xl text-gray-400 animate-pulse"></i>
+        </div>
+        <h3 class="text-lg font-semibold text-gray-900 mb-2 animate-fade-in-up">No hay empleados registrados</h3>
+        <p class="text-gray-600 mb-6 animate-fade-in-up delay-100 text-sm sm:text-base">Comienza agregando el primer empleado a tu sistema administrativo.</p>
+        <a href="{{ url_for('nuevo_empleado') }}" 
+           class="inline-flex items-center px-6 py-3 bg-primary-600 text-white font-medium rounded-xl hover:bg-primary-700 transition-colors btn-press hover-lift animate-fade-in-up delay-200 text-sm sm:text-base">
+            <i class="fas fa-plus mr-2"></i>Agregar Primer Empleado
+        </a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %} 

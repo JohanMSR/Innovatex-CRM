@@ -1,0 +1,151 @@
+{% extends "base.html" %}
+
+{% block title %}Editar Empleado - Sistema Administrativo{% endblock %}
+{% block page_title %}Editar Empleado{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto">
+    <!-- Encabezado -->
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-6 mb-6 hover-lift animate-scale-in">
+        <div class="flex flex-col sm:flex-row items-start sm:items-center space-y-3 sm:space-y-0">
+            <div class="w-10 h-10 sm:w-12 sm:h-12 bg-primary-100 rounded-lg flex items-center justify-center mr-0 sm:mr-3 hover-scale">
+                <i class="fas fa-user-edit text-primary-600 text-lg sm:text-xl"></i>
+            </div>
+            <div class="text-center sm:text-left">
+                <h1 class="text-2xl sm:text-3xl font-bold text-gray-900">Editar Empleado</h1>
+                <p class="text-gray-600 mt-1 text-sm sm:text-base">Modificar información del empleado</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Formulario -->
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-6 hover-lift animate-on-scroll">
+        <form method="POST" class="space-y-6">
+            <!-- Información personal -->
+            <div class="animate-fade-in-up delay-100">
+                <div class="flex flex-col sm:flex-row items-start sm:items-center mb-4 sm:mb-6 space-y-2 sm:space-y-0">
+                    <div class="w-8 h-8 sm:w-10 sm:h-10 bg-primary-100 rounded-lg flex items-center justify-center mr-0 sm:mr-3 hover-scale">
+                        <i class="fas fa-user text-primary-600 text-sm sm:text-base"></i>
+                    </div>
+                    <h3 class="text-lg sm:text-xl font-medium text-gray-900 text-center sm:text-left">
+                        Información Personal
+                    </h3>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+                    <div class="form-group animate-fade-in-up delay-200">
+                        <label for="nombre" class="form-label required">Nombre</label>
+                        <input type="text" id="nombre" name="nombre" value="{{ empleado.nombre }}" required
+                               class="form-input">
+                    </div>
+                    <div class="form-group animate-fade-in-up delay-300">
+                        <label for="apellido" class="form-label required">Apellido</label>
+                        <input type="text" id="apellido" name="apellido" value="{{ empleado.apellido }}" required
+                               class="form-input">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Información de contacto -->
+            <div class="animate-fade-in-up delay-400">
+                <div class="flex flex-col sm:flex-row items-start sm:items-center mb-4 sm:mb-6 space-y-2 sm:space-y-0">
+                    <div class="w-8 h-8 sm:w-10 sm:h-10 bg-green-100 rounded-lg flex items-center justify-center mr-0 sm:mr-3 hover-scale">
+                        <i class="fas fa-envelope text-green-600 text-sm sm:text-base"></i>
+                    </div>
+                    <h3 class="text-lg sm:text-xl font-medium text-gray-900 text-center sm:text-left">
+                        Información de Contacto
+                    </h3>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+                    <div class="form-group animate-fade-in-up delay-500">
+                        <label for="email" class="form-label required">Email</label>
+                        <input type="email" id="email" name="email" value="{{ empleado.email }}" required
+                               class="form-input">
+                    </div>
+                    <div class="form-group animate-fade-in-up delay-600">
+                        <label for="telefono" class="form-label">Teléfono</label>
+                        <input type="tel" id="telefono" name="telefono" value="{{ empleado.telefono or '' }}"
+                               class="form-input">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Información laboral -->
+            <div class="animate-fade-in-up delay-700">
+                <div class="flex flex-col sm:flex-row items-start sm:items-center mb-4 sm:mb-6 space-y-2 sm:space-y-0">
+                    <div class="w-8 h-8 sm:w-10 sm:h-10 bg-purple-100 rounded-lg flex items-center justify-center mr-0 sm:mr-3 hover-scale">
+                        <i class="fas fa-briefcase text-purple-600 text-sm sm:text-base"></i>
+                    </div>
+                    <h3 class="text-lg sm:text-xl font-medium text-gray-900 text-center sm:text-left">
+                        Información Laboral
+                    </h3>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+                    <div class="form-group animate-fade-in-up delay-800 sm:col-span-1">
+                        <label for="departamento" class="form-label">Departamento</label>
+                        <select id="departamento" name="departamento"
+                                class="form-select">
+                            <option value="">Seleccionar departamento</option>
+                            {% for dept in departamentos %}
+                            <option value="{{ dept.nombre }}" {% if empleado.departamento == dept.nombre %}selected{% endif %}>
+                                {{ dept.nombre }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group animate-fade-in-up delay-900 sm:col-span-1">
+                        <label for="cargo" class="form-label">Cargo</label>
+                        <input type="text" id="cargo" name="cargo" value="{{ empleado.cargo or '' }}"
+                               class="form-input">
+                    </div>
+                    <div class="form-group animate-fade-in-up delay-1000 sm:col-span-1">
+                        <label for="salario" class="form-label">Salario</label>
+                        <div class="input-with-icon">
+                            <input type="number" id="salario" name="salario" step="0.01" min="0" 
+                                   value="{{ empleado.salario or '' }}"
+                                   class="form-input">
+                            <span class="icon text-gray-500">$</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Información adicional -->
+            <div class="bg-gray-50 rounded-xl p-4 sm:p-6 animate-fade-in-up delay-1100">
+                <div class="flex items-center mb-3 sm:mb-4 justify-center sm:justify-start">
+                    <div class="w-8 h-8 sm:w-10 sm:h-10 bg-blue-100 rounded-lg flex items-center justify-center mr-0 sm:mr-3 hover-scale">
+                        <i class="fas fa-info-circle text-blue-600 text-sm sm:text-base"></i>
+                    </div>
+                    <h3 class="text-sm sm:text-base font-medium text-gray-900">Información Adicional</h3>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs sm:text-sm text-gray-600">
+                    <div class="text-center sm:text-left">
+                        <p><strong>ID:</strong> {{ empleado.id }}</p>
+                        <p><strong>Fecha de contratación:</strong> {{ empleado.fecha_contratacion.strftime('%d/%m/%Y') if empleado.fecha_contratacion else 'No especificada' }}</p>
+                    </div>
+                    <div class="text-center sm:text-left">
+                        <p><strong>Estado:</strong> 
+                            {% if empleado.activo %}
+                                <span class="text-green-600 font-medium">Activo</span>
+                            {% else %}
+                                <span class="text-red-600 font-medium">Inactivo</span>
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Botones de acción -->
+            <div class="flex flex-col sm:flex-row justify-end space-y-3 sm:space-y-0 sm:space-x-3 pt-6 border-t border-gray-200">
+                <a href="{{ url_for('empleados') }}" 
+                   class="btn-secondary w-full sm:w-auto text-center">
+                    <i class="fas fa-times mr-2"></i>Cancelar
+                </a>
+                <button type="submit" 
+                        class="btn-primary w-full sm:w-auto text-center">
+                    <i class="fas fa-save mr-2"></i>Actualizar Empleado
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %} 
