@@ -72,16 +72,20 @@ def nuevo_empleado():
 def editar_empleado(id):
     empleado = Empleado.query.get_or_404(id)
     if request.method == 'POST':
-        empleado.nombre = request.form['nombre']
-        empleado.apellido = request.form['apellido']
-        empleado.email = request.form['email']
-        empleado.telefono = request.form['telefono']
-        empleado.departamento = request.form['departamento']
-        empleado.cargo = request.form['cargo']
-        empleado.salario = float(request.form['salario'])
-        db.session.commit()
-        flash('Empleado actualizado exitosamente', 'success')
-        return redirect(url_for('empleados'))
+        try:
+            empleado.nombre = request.form['nombre']
+            empleado.apellido = request.form['apellido']
+            empleado.email = request.form['email']
+            empleado.telefono = request.form['telefono']
+            empleado.departamento = request.form['departamento']
+            empleado.cargo = request.form['cargo']
+            empleado.salario = float(request.form['salario']) if request.form['salario'] else None
+            db.session.commit()
+            flash('Empleado actualizado exitosamente', 'success')
+            return redirect(url_for('empleados'))
+        except Exception as e:
+            flash('Error al actualizar el empleado. Verifica que el email no esté duplicado y que el salario sea un número válido.', 'error')
+            db.session.rollback()
     
     departamentos = Departamento.query.all()
     return render_template('editar_empleado.html', empleado=empleado, departamentos=departamentos)
